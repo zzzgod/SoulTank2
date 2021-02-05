@@ -280,13 +280,13 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
+        -246.502,
+        -146.725,
         0,
         0,
         0,
-        0,
-        0,
-        0,
-        1,
+        0.21643961393810288,
+        0.9762960071199334,
         1.264,
         1.264,
         1.264
@@ -296,7 +296,7 @@
       "__type__": "cc.Vec3",
       "x": 0,
       "y": 0,
-      "z": 0
+      "z": 25
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -410,6 +410,7 @@
       "__id__": 6
     },
     "_enabled": true,
+    "angularSpeed": 2,
     "_id": "a0vMEx42JIM550qifPH1DJ"
   },
   {
@@ -452,6 +453,12 @@
       "__id__": 5
     },
     "_enabled": true,
+    "forwardAcceleration": 0.06,
+    "backwardAcceleration": 0.03,
+    "frictionAcceleration": 0.02,
+    "forwardSpeed": 4,
+    "backwardSpeed": 1,
+    "angularSpeed": 1,
     "_id": "2eA6j7kvtFhohj7LVsKJBb"
   },
   {

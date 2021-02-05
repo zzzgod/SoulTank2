@@ -12,7 +12,7 @@ export default class NewClass extends cc.Component {
 
     // LIFE-CYCLE CALLBACKS:
 
-    @property({displayName:'旋转角速度'})
+    @property
     angularSpeed: number = 1;
 
     mouseLocation: cc.Vec2 = cc.v2();

@@ -15,10 +15,13 @@ export default class NewClass extends cc.Component {
     currentAngularSpeed: number = 0;
 
     @property({displayName:'前向加速度'})
-    forwardAcceleration: number = 0.4;
+    forwardAcceleration: number = 0.06;
 
     @property({displayName:'后向加速度'})
-    backwardAcceleration: number = 0.1;
+    backwardAcceleration: number = 0.03;
+
+    @property({displayName:'摩擦加速度'})
+    frictionAcceleration: number = 0.02;
 
     @property({displayName:'前向最大速度'})
     forwardSpeed: number = 4;
@@ -41,7 +44,7 @@ export default class NewClass extends cc.Component {
     }
 
     start () {
-        cc.log('jdadjajdjoaopdopadpoaopdkopadkopkaopdkopadopakdodkpoakdposopkdpak');
+
     }
 
     update (dt) {
@@ -94,11 +97,32 @@ export default class NewClass extends cc.Component {
             if(this.currentSpeed > -this.backwardSpeed)
                 this.currentSpeed = Math.max(this.currentSpeed - this.backwardAcceleration, -this.backwardSpeed)
         }
+        // 摩擦力减速
+        if(Math.abs(this.currentSpeed) < this.frictionAcceleration){
+            this.currentSpeed = 0;
+        }
+        else if(this.currentSpeed > 0){
+            this.currentSpeed -= this.frictionAcceleration;
+        }
+        else{
+            this.currentSpeed += this.frictionAcceleration;
+        }
+        // 转向
         if(this.key_a_pressed && !this.key_d_pressed){
-            this.currentAngularSpeed = this.angularSpeed;
+            if(this.currentSpeed > 0){
+                this.currentAngularSpeed = this.angularSpeed;
+            }
+            else{
+                this.currentAngularSpeed = -this.angularSpeed;
+            }
         }
         else if(!this.key_a_pressed && this.key_d_pressed){
-            this.currentAngularSpeed = -this.angularSpeed;
+            if(this.currentSpeed > 0){
+                this.currentAngularSpeed = -this.angularSpeed;
+            }
+            else{
+                this.currentAngularSpeed = this.angularSpeed;
+            }
         }
         this.node.angle += this.currentAngularSpeed;
         this.node.x += this.currentSpeed * Math.cos(this.node.angle * Math.PI / 180);
