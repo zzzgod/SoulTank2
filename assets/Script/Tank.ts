@@ -109,7 +109,7 @@ export default class NewClass extends cc.Component {
         }
         // 转向
         if(this.key_a_pressed && !this.key_d_pressed){
-            if(this.currentSpeed > 0){
+            if(this.currentSpeed >= 0){
                 this.currentAngularSpeed = this.angularSpeed;
             }
             else{
@@ -117,7 +117,7 @@ export default class NewClass extends cc.Component {
             }
         }
         else if(!this.key_a_pressed && this.key_d_pressed){
-            if(this.currentSpeed > 0){
+            if(this.currentSpeed >= 0){
                 this.currentAngularSpeed = -this.angularSpeed;
             }
             else{
