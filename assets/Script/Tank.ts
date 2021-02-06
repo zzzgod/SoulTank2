@@ -36,7 +36,7 @@ export default class NewClass extends cc.Component {
     tracks: cc.Prefab = null;
 
     // 设置每走几个像素放一个track
-    steps: number = 10;
+    steps: number = 4;
     count = 0;
     
     key_w_pressed: boolean = false;
@@ -138,22 +138,52 @@ export default class NewClass extends cc.Component {
         this.count += this.currentSpeed;
         if(this.count > this.steps){
             this.count %= this.steps;
-            this.placeTrack();
+            this.placeTrackBack();
+        }
+        else if(this.count < -this.steps){
+            this.count += this.steps;
+            this.placeTraceFront()
         }
     }
 
-    placeTrack () {
-        // 绘制两条履带轨迹
+    placeTrackBack () {
+        // 在后方绘制两条履带轨迹
         let node1: cc.Node = cc.instantiate(this.tracks), node2: cc.Node = cc.instantiate(this.tracks);
         let script1 = node1.getComponent('Track'), script2 = node2.getComponent('Track');
 
-        let p1: cc.Vec2 = cc.v2(-this.node.width / 2 - node1.width / 2, this.node.height / 2 - node1.height / 2);
-        let p2: cc.Vec2 = cc.v2(-this.node.width / 2 - node2.width / 2, -this.node.height / 2 + node2.height / 2);
+        let p1: cc.Vec2 = cc.v2(-this.node.width / 2 + 30, this.node.height / 2 - node1.height);
+        let p2: cc.Vec2 = cc.v2(-this.node.width / 2 + 30, -this.node.height / 2 + node2.height);
         p1 = this.node.parent.convertToNodeSpaceAR(this.node.convertToWorldSpaceAR(p1));
         p2 = this.node.parent.convertToNodeSpaceAR(this.node.convertToWorldSpaceAR(p2));
-
+        // 绑定父节点
         node1.setParent(this.node.parent);
         node2.setParent(this.node.parent);
+        // 置于顶层
+        node1.setSiblingIndex(0);
+        node2.setSiblingIndex(0);
+        node1.setPosition(p1);
+        node2.setPosition(p2);
+        node1.angle = this.node.angle;
+        node2.angle = this.node.angle;
+        script1.show();
+        script2.show();
+    }
+
+    placeTraceFront(){
+        // 在后方绘制两条履带轨迹
+        let node1: cc.Node = cc.instantiate(this.tracks), node2: cc.Node = cc.instantiate(this.tracks);
+        let script1 = node1.getComponent('Track'), script2 = node2.getComponent('Track');
+
+        let p1: cc.Vec2 = cc.v2(this.node.width / 2 - 30, this.node.height / 2 - node1.height);
+        let p2: cc.Vec2 = cc.v2(this.node.width / 2 - 30, -this.node.height / 2 + node2.height);
+        p1 = this.node.parent.convertToNodeSpaceAR(this.node.convertToWorldSpaceAR(p1));
+        p2 = this.node.parent.convertToNodeSpaceAR(this.node.convertToWorldSpaceAR(p2));
+        // 绑定父节点
+        node1.setParent(this.node.parent);
+        node2.setParent(this.node.parent);
+        // 置于顶层
+        node1.setSiblingIndex(0);
+        node2.setSiblingIndex(0);
         node1.setPosition(p1);
         node2.setPosition(p2);
         node1.angle = this.node.angle;
