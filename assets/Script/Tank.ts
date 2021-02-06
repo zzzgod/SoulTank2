@@ -31,6 +31,13 @@ export default class NewClass extends cc.Component {
     
     @property({displayName:'旋转角速度'})
     angularSpeed: number = 1;
+
+    @property({type: cc.Prefab, displayName: '履带轨迹'})
+    tracks: cc.Prefab = null;
+
+    // 设置每走几个像素放一个track
+    steps: number = 10;
+    count = 0;
     
     key_w_pressed: boolean = false;
     key_a_pressed: boolean = false;
@@ -127,5 +134,31 @@ export default class NewClass extends cc.Component {
         this.node.angle += this.currentAngularSpeed;
         this.node.x += this.currentSpeed * Math.cos(this.node.angle * Math.PI / 180);
         this.node.y += this.currentSpeed * Math.sin(this.node.angle * Math.PI / 180);
+
+        this.count += this.currentSpeed;
+        if(this.count > this.steps){
+            this.count %= this.steps;
+            this.placeTrack();
+        }
+    }
+
+    placeTrack () {
+        // 绘制两条履带轨迹
+        let node1: cc.Node = cc.instantiate(this.tracks), node2: cc.Node = cc.instantiate(this.tracks);
+        let script1 = node1.getComponent('Track'), script2 = node2.getComponent('Track');
+
+        let p1: cc.Vec2 = cc.v2(-this.node.width / 2 - node1.width / 2, this.node.height / 2 - node1.height / 2);
+        let p2: cc.Vec2 = cc.v2(-this.node.width / 2 - node2.width / 2, -this.node.height / 2 + node2.height / 2);
+        p1 = this.node.parent.convertToNodeSpaceAR(this.node.convertToWorldSpaceAR(p1));
+        p2 = this.node.parent.convertToNodeSpaceAR(this.node.convertToWorldSpaceAR(p2));
+
+        node1.setParent(this.node.parent);
+        node2.setParent(this.node.parent);
+        node1.setPosition(p1);
+        node2.setPosition(p2);
+        node1.angle = this.node.angle;
+        node2.angle = this.node.angle;
+        script1.show();
+        script2.show();
     }
 }
