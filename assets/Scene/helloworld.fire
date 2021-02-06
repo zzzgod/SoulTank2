@@ -580,7 +580,7 @@
     "forwardAcceleration": 0.06,
     "backwardAcceleration": 0.03,
     "frictionAcceleration": 0.02,
-    "forwardSpeed": 4,
+    "forwardSpeed": 3.5,
     "backwardSpeed": 1,
     "angularSpeed": 1,
     "tracks": {

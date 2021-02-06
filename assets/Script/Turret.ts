@@ -30,6 +30,15 @@ export default class NewClass extends cc.Component {
     @property({displayName: '特效刷新速率'})
     interval: number = 0.03;
 
+    // @property({displayName: '炮弹图片'})
+    // bullet: cc.SpriteFrame = null;
+
+    @property({displayName: '射速'})
+    fireRate: number = 2;
+
+    @property({displayName: '炮弹速度'})
+    bulletSpeed: number = 8;
+
     mouseLocation: cc.Vec2 = cc.v2();
 
     // 开火特效的节点
@@ -95,5 +104,9 @@ export default class NewClass extends cc.Component {
             return;
         }
         this.subSprite.spriteFrame = this.frames[this.index++];
+    }
+
+    shoot() {
+
     }
 }

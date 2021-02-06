@@ -24,7 +24,7 @@ export default class NewClass extends cc.Component {
     frictionAcceleration: number = 0.02;
 
     @property({displayName:'前向最大速度'})
-    forwardSpeed: number = 4;
+    forwardSpeed: number = 3;
 
     @property({displayName:'后向最大速度'})
     backwardSpeed: number = 1;
@@ -35,10 +35,18 @@ export default class NewClass extends cc.Component {
     @property({type: cc.Prefab, displayName: '履带轨迹'})
     tracks: cc.Prefab = null;
 
+    @property({type: cc.AudioClip, displayName: '移动音效'})
+    moveSound: cc.AudioClip = null;
+
+    @property({displayName: '音量大小'})
+    volume: number = 0.5;
+
     // 设置每走几个像素放一个track
-    steps: number = 4;
-    count = 0;
+    playSound: boolean = false;
     
+    steps: number = 5;
+    count = 0;
+    audioId: number = 0;
     key_w_pressed: boolean = false;
     key_a_pressed: boolean = false;
     key_s_pressed: boolean = false;
@@ -135,6 +143,7 @@ export default class NewClass extends cc.Component {
         this.node.x += this.currentSpeed * Math.cos(this.node.angle * Math.PI / 180);
         this.node.y += this.currentSpeed * Math.sin(this.node.angle * Math.PI / 180);
 
+        // 履带特效
         this.count += this.currentSpeed;
         if(this.count > this.steps){
             this.count %= this.steps;
@@ -144,6 +153,16 @@ export default class NewClass extends cc.Component {
             this.count += this.steps;
             this.placeTraceFront()
         }
+        
+        // 移动音效
+        if(!this.playSound && this.currentSpeed != 0){
+            this.audioId = cc.audioEngine.play(this.moveSound, true, this.volume);
+            this.playSound = true;
+        }
+        else if(this.currentSpeed == 0 && this.playSound){
+            cc.audioEngine.stop(this.audioId);
+            this.playSound = false;
+        }
     }
 
     placeTrackBack () {
@@ -152,7 +171,7 @@ export default class NewClass extends cc.Component {
         let script1 = node1.getComponent('Track'), script2 = node2.getComponent('Track');
 
         let p1: cc.Vec2 = cc.v2(-this.node.width / 2 + 30, this.node.height / 2 - node1.height);
-        let p2: cc.Vec2 = cc.v2(-this.node.width / 2 + 30, -this.node.height / 2 + node2.height);
+        let p2: cc.Vec2 = cc.v2(-this.node.width / 2 + 30, -this.node.height / 2 + node2.height + 10);
         p1 = this.node.parent.convertToNodeSpaceAR(this.node.convertToWorldSpaceAR(p1));
         p2 = this.node.parent.convertToNodeSpaceAR(this.node.convertToWorldSpaceAR(p2));
         // 绑定父节点
@@ -175,7 +194,7 @@ export default class NewClass extends cc.Component {
         let script1 = node1.getComponent('Track'), script2 = node2.getComponent('Track');
 
         let p1: cc.Vec2 = cc.v2(this.node.width / 2 - 30, this.node.height / 2 - node1.height);
-        let p2: cc.Vec2 = cc.v2(this.node.width / 2 - 30, -this.node.height / 2 + node2.height);
+        let p2: cc.Vec2 = cc.v2(this.node.width / 2 - 30, -this.node.height / 2 + node2.height + 10);
         p1 = this.node.parent.convertToNodeSpaceAR(this.node.convertToWorldSpaceAR(p1));
         p2 = this.node.parent.convertToNodeSpaceAR(this.node.convertToWorldSpaceAR(p2));
         // 绑定父节点
