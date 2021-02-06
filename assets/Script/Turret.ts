@@ -30,14 +30,14 @@ export default class NewClass extends cc.Component {
     @property({displayName: '特效刷新速率'})
     interval: number = 0.03;
 
-    // @property({displayName: '炮弹图片'})
-    // bullet: cc.SpriteFrame = null;
+    @property({displayName: '炮弹', type: cc.Prefab})
+    bullet: cc.Prefab = null;
+
+    @property({type: cc.Vec2, displayName: '炮弹位置'})
+    bulletPosition: cc.Vec2 = cc.v2(270, 6);
 
     @property({displayName: '射速'})
     fireRate: number = 2;
-
-    @property({displayName: '炮弹速度'})
-    bulletSpeed: number = 8;
 
     mouseLocation: cc.Vec2 = cc.v2();
 
@@ -46,6 +46,9 @@ export default class NewClass extends cc.Component {
     index: number = 0;
     subNode: cc.Node = null;
     subSprite: cc.Sprite = null;
+
+    // 开火冷却
+    cooldown: boolean = false;
 
 
     onLoad () {
@@ -90,10 +93,25 @@ export default class NewClass extends cc.Component {
     }
 
     onMouseDown(e: cc.Event.EventMouse) {
-        // 开火
+        // 判断是否在冷却中
+        if(this.cooldown)
+            return;
+        this.cooldown = true;
+        let self = this;
+        // 等待一段时间后，可再次开炮
+        setTimeout(function refresh() {
+            self.cooldown = false;
+        }, this.fireRate * 1000);
+        // 开火特效
         this.schedule(this.onTimer, this.interval, this.frames.length);
         // 音效
         cc.audioEngine.play(this.fireAudio, false, this.volumn);
+        // 发射子弹
+        let bullet: cc.Node = cc.instantiate(this.bullet);
+        let position = this.node.parent.parent.convertToNodeSpaceAR(this.node.convertToWorldSpaceAR(this.bulletPosition))
+        bullet.angle = this.node.angle + this.node.parent.angle;
+        bullet.setParent(this.node.parent.parent);
+        bullet.setPosition(position);
     }
 
     onTimer() {
@@ -104,9 +122,5 @@ export default class NewClass extends cc.Component {
             return;
         }
         this.subSprite.spriteFrame = this.frames[this.index++];
-    }
-
-    shoot() {
-
     }
 }
