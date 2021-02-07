@@ -658,7 +658,7 @@
     },
     "interval": 0.03,
     "bullet": {
-      "__uuid__": "2c345f16-51eb-4514-9705-51735572a8b4"
+      "__uuid__": "9935fd36-90b1-4d43-b034-08a9a6f22df9"
     },
     "bulletPosition": {
       "__type__": "cc.Vec2",
@@ -1353,7 +1353,7 @@
       "__id__": 33
     },
     "asset": {
-      "__uuid__": "2c345f16-51eb-4514-9705-51735572a8b4"
+      "__uuid__": "9935fd36-90b1-4d43-b034-08a9a6f22df9"
     },
     "fileId": "",
     "sync": false
