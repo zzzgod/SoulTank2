@@ -12,16 +12,14 @@ export default class NewClass extends cc.Component {
 
     currentSpeed: number = 0;
 
-    currentAngularSpeed: number = 0;
-
     @property({displayName:'前向加速度'})
-    forwardAcceleration: number = 0.06;
+    forwardAcceleration: number = 6;
 
     @property({displayName:'后向加速度'})
-    backwardAcceleration: number = 0.03;
+    backwardAcceleration: number = 4;
 
-    @property({displayName:'摩擦加速度'})
-    frictionAcceleration: number = 0.02;
+    @property({displayName:'摩擦力加速度'})
+    frictionAcceleration: number = 3;
 
     @property({displayName:'前向最大速度'})
     forwardSpeed: number = 3;
@@ -44,7 +42,7 @@ export default class NewClass extends cc.Component {
     // 设置每走几个像素放一个track
     playSound: boolean = false;
     
-    steps: number = 5;
+    steps: number = 300;
     count = 0;
     audioId: number = 0;
     key_w_pressed: boolean = false;
@@ -53,9 +51,14 @@ export default class NewClass extends cc.Component {
     key_d_pressed: boolean = false;
     // LIFE-CYCLE CALLBACKS:
 
+    body: cc.RigidBody = null;
+    collider: cc.PhysicsBoxCollider = null;
+
     onLoad () {
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this.onKeyDown, this);
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_UP, this.onKeyUp, this);
+        this.body = this.node.getComponent(cc.RigidBody);
+        this.collider = this.node.getComponent(cc.PhysicsBoxCollider)
     }
 
     start () {
@@ -101,7 +104,7 @@ export default class NewClass extends cc.Component {
     }
 
     move(){
-        this.currentAngularSpeed = 0;
+        this.body.angularVelocity = 0;
         if(this.key_w_pressed && !this.key_s_pressed){
             // 前向加速或保持匀速
             if(this.currentSpeed < this.forwardSpeed)
@@ -112,7 +115,7 @@ export default class NewClass extends cc.Component {
             if(this.currentSpeed > -this.backwardSpeed)
                 this.currentSpeed = Math.max(this.currentSpeed - this.backwardAcceleration, -this.backwardSpeed)
         }
-        // 摩擦力减速
+        // // 摩擦力减速
         if(Math.abs(this.currentSpeed) < this.frictionAcceleration){
             this.currentSpeed = 0;
         }
@@ -125,23 +128,22 @@ export default class NewClass extends cc.Component {
         // 转向
         if(this.key_a_pressed && !this.key_d_pressed){
             if(this.currentSpeed >= 0){
-                this.currentAngularSpeed = this.angularSpeed;
+                this.body.angularVelocity = -this.angularSpeed;
             }
             else{
-                this.currentAngularSpeed = -this.angularSpeed;
+                this.body.angularVelocity = this.angularSpeed;
             }
         }
         else if(!this.key_a_pressed && this.key_d_pressed){
             if(this.currentSpeed >= 0){
-                this.currentAngularSpeed = -this.angularSpeed;
+                this.body.angularVelocity = this.angularSpeed;
             }
             else{
-                this.currentAngularSpeed = this.angularSpeed;
+                this.body.angularVelocity = -this.angularSpeed;
             }
         }
-        this.node.angle += this.currentAngularSpeed;
-        this.node.x += this.currentSpeed * Math.cos(this.node.angle * Math.PI / 180);
-        this.node.y += this.currentSpeed * Math.sin(this.node.angle * Math.PI / 180);
+        this.body.linearVelocity = cc.v2(this.currentSpeed * Math.cos(this.node.angle * Math.PI / 180), this.currentSpeed * Math.sin(this.node.angle * Math.PI / 180));
+        this.collider.apply();
 
         // 履带特效
         this.count += this.currentSpeed;
@@ -178,8 +180,8 @@ export default class NewClass extends cc.Component {
         node1.setParent(this.node.parent);
         node2.setParent(this.node.parent);
         // 置于顶层
-        node1.setSiblingIndex(0);
-        node2.setSiblingIndex(0);
+        node1.setSiblingIndex(1);
+        node2.setSiblingIndex(1);
         node1.setPosition(p1);
         node2.setPosition(p2);
         node1.angle = this.node.angle;
@@ -201,8 +203,8 @@ export default class NewClass extends cc.Component {
         node1.setParent(this.node.parent);
         node2.setParent(this.node.parent);
         // 置于顶层
-        node1.setSiblingIndex(0);
-        node2.setSiblingIndex(0);
+        node1.setSiblingIndex(1);
+        node2.setSiblingIndex(1);
         node1.setPosition(p1);
         node2.setPosition(p2);
         node1.angle = this.node.angle;

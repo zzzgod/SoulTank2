@@ -54,6 +54,7 @@ export default class NewClass extends cc.Component {
     onLoad () {
         this.node.parent.parent.on(cc.Node.EventType.MOUSE_MOVE, this.onMouseMove, this);
         this.node.parent.parent.on(cc.Node.EventType.MOUSE_DOWN, this.onMouseDown, this);
+        cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this.onKeyDown, this);
         // 加载开火特效
         this.subNode = new cc.Node('fireEffects');
         this.subNode.setPosition(this.firePosition);
@@ -67,7 +68,11 @@ export default class NewClass extends cc.Component {
     }
 
     update (dt) {
-        let direction: cc.Vec2 = this.mouseLocation.sub(this.node.parent.getPosition());
+        // 将鼠标的摄像机坐标转换为绝对坐标
+        let camera = cc.find('Canvas/Main Camera').getComponent(cc.Camera);
+        let location = camera.getCameraToWorldPoint(this.mouseLocation);
+        // 炮塔应指向的方向
+        let direction: cc.Vec2 = location.sub(this.node.parent.getPosition());
         // 鼠标相对父节点的角度
         let mouseAngle: number = Math.atan2(direction.y, direction.x) * 180 / Math.PI - this.node.parent.angle;
         // 计算需要转动的角度[0~360]，0~180正转，180~360反转
@@ -80,16 +85,16 @@ export default class NewClass extends cc.Component {
         }
         else if(delta < 180){
             // 抵消坦克自转的角速度
-            this.node.angle += this.angularSpeed - this.node.parent.getComponent('Tank').currentAngularSpeed;
+            this.node.angle += this.angularSpeed + this.node.parent.getComponent(cc.RigidBody).angularVelocity / 60;
         }
         else{
-            this.node.angle -= this.angularSpeed + this.node.parent.getComponent('Tank').currentAngularSpeed;
+            this.node.angle -= this.angularSpeed - this.node.parent.getComponent(cc.RigidBody).angularVelocity / 60;
         }
     }
 
     onMouseMove(e: cc.Event.EventMouse) {
-        // 将鼠标的绝对坐标转换为相对于画布的坐标系
-        this.mouseLocation = this.node.parent.parent.convertToNodeSpaceAR(e.getLocation())
+        // 获得鼠标的摄像机坐标
+        this.mouseLocation = e.getLocation();
     }
 
     onMouseDown(e: cc.Event.EventMouse) {
@@ -122,5 +127,17 @@ export default class NewClass extends cc.Component {
             return;
         }
         this.subSprite.spriteFrame = this.frames[this.index++];
+    }
+
+    onKeyDown(e: cc.Event.EventKeyboard) {
+        if(e.keyCode == cc.macro.KEY.space){
+            cc.log(this.mouseLocation.toString());
+            cc.log(this.node.parent.getPosition().toString());
+            let direction: cc.Vec2 = this.mouseLocation.sub(this.node.parent.getPosition());
+            // 鼠标相对父节点的角度
+            let mouseAngle: number = Math.atan2(direction.y, direction.x) * 180 / Math.PI - this.node.parent.angle;
+            cc.log(direction.toString())
+            cc.log(mouseAngle.toString())
+        }
     }
 }
