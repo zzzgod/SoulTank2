@@ -11,18 +11,21 @@ const {ccclass, property} = cc._decorator;
 export default class NewClass extends cc.Component {
 
     @property({displayName: '子弹速度'})
-    speed: number = 8;
+    speed: number = 480;
 
+    body: cc.RigidBody = null;
     // LIFE-CYCLE CALLBACKS:
 
-    // onLoad () {}
+    onLoad () {
+        this.node.group = 'bullet';
+        this.body = this.node.getComponent(cc.RigidBody);
+    }
 
     start () {
 
     }
 
     update (dt) {
-        this.node.x += this.speed * Math.cos(this.node.angle / 180 * Math.PI);
-        this.node.y += this.speed * Math.sin(this.node.angle / 180 * Math.PI);
+        this.body.linearVelocity = cc.v2(this.speed * Math.cos(this.node.angle / 180 * Math.PI), this.speed * Math.sin(this.node.angle / 180 * Math.PI));
     }
 }

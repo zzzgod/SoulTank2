@@ -18,7 +18,7 @@ export default class NewClass extends cc.Component {
     @property({type: cc.AudioClip, displayName: '开火音效'})
     fireAudio: cc.AudioClip = null;
 
-    @property({type: cc.Vec2, displayName: '特效位置'})
+    @property({displayName: '特效位置'})
     firePosition: cc.Vec2 = cc.v2(260, 0);
 
     @property({displayName: '音量大小'})
@@ -33,7 +33,7 @@ export default class NewClass extends cc.Component {
     @property({displayName: '炮弹', type: cc.Prefab})
     bullet: cc.Prefab = null;
 
-    @property({type: cc.Vec2, displayName: '炮弹位置'})
+    @property({displayName: '炮弹位置'})
     bulletPosition: cc.Vec2 = cc.v2(270, 6);
 
     @property({displayName: '射速'})
@@ -70,9 +70,9 @@ export default class NewClass extends cc.Component {
     update (dt) {
         // 将鼠标的摄像机坐标转换为绝对坐标
         let camera = cc.find('Canvas/Main Camera').getComponent(cc.Camera);
-        let location = camera.getCameraToWorldPoint(this.mouseLocation);
+        let location = camera.getScreenToWorldPoint(this.mouseLocation);
         // 炮塔应指向的方向
-        let direction: cc.Vec2 = location.sub(this.node.parent.getPosition());
+        let direction: cc.Vec3 = location.sub(cc.v3(this.node.parent.getPosition()));
         // 鼠标相对父节点的角度
         let mouseAngle: number = Math.atan2(direction.y, direction.x) * 180 / Math.PI - this.node.parent.angle;
         // 计算需要转动的角度[0~360]，0~180正转，180~360反转
