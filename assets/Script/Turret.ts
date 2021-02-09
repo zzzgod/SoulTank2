@@ -54,7 +54,7 @@ export default class NewClass extends cc.Component {
     onLoad () {
         this.node.parent.parent.on(cc.Node.EventType.MOUSE_MOVE, this.onMouseMove, this);
         this.node.parent.parent.on(cc.Node.EventType.MOUSE_DOWN, this.onMouseDown, this);
-        cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this.onKeyDown, this);
+        // cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this.onKeyDown, this);
         // 加载开火特效
         this.subNode = new cc.Node('fireEffects');
         this.subNode.setPosition(this.firePosition);
@@ -129,15 +129,15 @@ export default class NewClass extends cc.Component {
         this.subSprite.spriteFrame = this.frames[this.index++];
     }
 
-    onKeyDown(e: cc.Event.EventKeyboard) {
-        if(e.keyCode == cc.macro.KEY.space){
-            cc.log(this.mouseLocation.toString());
-            cc.log(this.node.parent.getPosition().toString());
-            let direction: cc.Vec2 = this.mouseLocation.sub(this.node.parent.getPosition());
-            // 鼠标相对父节点的角度
-            let mouseAngle: number = Math.atan2(direction.y, direction.x) * 180 / Math.PI - this.node.parent.angle;
-            cc.log(direction.toString())
-            cc.log(mouseAngle.toString())
-        }
-    }
+    // onKeyDown(e: cc.Event.EventKeyboard) {
+    //     if(e.keyCode == cc.macro.KEY.space){
+    //         cc.log(this.mouseLocation.toString());
+    //         cc.log(this.node.parent.getPosition().toString());
+    //         let direction: cc.Vec2 = this.mouseLocation.sub(this.node.parent.getPosition());
+    //         // 鼠标相对父节点的角度
+    //         let mouseAngle: number = Math.atan2(direction.y, direction.x) * 180 / Math.PI - this.node.parent.angle;
+    //         cc.log(direction.toString())
+    //         cc.log(mouseAngle.toString())
+    //     }
+    // }
 }

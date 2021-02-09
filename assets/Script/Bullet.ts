@@ -28,4 +28,9 @@ export default class NewClass extends cc.Component {
     update (dt) {
         this.body.linearVelocity = cc.v2(this.speed * Math.cos(this.node.angle / 180 * Math.PI), this.speed * Math.sin(this.node.angle / 180 * Math.PI));
     }
+
+    onBeginContact(contact: cc.PhysicsContact, selfCollider: cc.PhysicsCollider, otherCollider: cc.PhysicsCollider) {
+        this.node.destroy();
+        
+    }
 }

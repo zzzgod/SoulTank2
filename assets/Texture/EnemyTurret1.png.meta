@@ -1,0 +1,36 @@
+{
+  "ver": "2.3.5",
+  "uuid": "5875e58d-1e16-45e0-bf7b-a98583118f96",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "width": 360,
+  "height": 180,
+  "platformSettings": {},
+  "subMetas": {
+    "EnemyTurret1": {
+      "ver": "1.0.4",
+      "uuid": "b1ebf71a-6466-45d4-b6e1-022f75a6f3a3",
+      "rawTextureUuid": "5875e58d-1e16-45e0-bf7b-a98583118f96",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 45,
+      "offsetY": -10.5,
+      "trimX": 138,
+      "trimY": 59,
+      "width": 174,
+      "height": 83,
+      "rawWidth": 360,
+      "rawHeight": 180,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}
